@@ -1,0 +1,16 @@
+parameters:
+    phpVersion: 70200
+    level: 8
+    paths:
+        - src
+        - tests
+    parallel:
+        maximumNumberOfProcesses: 1
+    excludePaths:
+        - tests/report/*
+        - tests/TestAsset/*
+        - tests/Integration/TestAsset/*
+    ignoreErrors:
+        -
+            message: '%Comparison operation "<=" between int<-99, 99> and 99 is always true.%'
+            path: src/MessageSelector.php
