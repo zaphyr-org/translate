@@ -12,5 +12,5 @@ parameters:
         - tests/Integration/TestAsset/*
     ignoreErrors:
         -
-            message: '%Comparison operation "<=" between int<-99, 99> and 99 is always true.%'
+            message: '%Comparison operation "<=" between int<11, 99> and 99 is always true.%'
             path: src/MessageSelector.php
