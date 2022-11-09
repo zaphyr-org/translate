@@ -77,17 +77,17 @@ class TranslatorTest extends TestCase
 
     /**
      * ------------------------------------------
-     * FALLBACK
+     * FALLBACK LOCALE
      * ------------------------------------------
      */
 
     public function testFallback(): void
     {
-        self::assertEquals('en', $this->translator->getFallback());
+        self::assertEquals('en', $this->translator->getFallbackLocale());
 
-        $this->translator->setFallback($locale = 'de');
+        $this->translator->setFallbackLocale($locale = 'de');
 
-        self::assertEquals($locale, $this->translator->getFallback());
+        self::assertEquals($locale, $this->translator->getFallbackLocale());
     }
 
     /**
@@ -111,7 +111,7 @@ class TranslatorTest extends TestCase
     }
 
     /**
-     * @return array<string, array>
+     * @return array<string, string[]>
      */
     public function validReaderDataProvider(): array
     {
@@ -250,8 +250,8 @@ class TranslatorTest extends TestCase
 
     public function testChoiceWithCountable(): void
     {
-        $values = new class implements Countable {
-
+        $values = new class implements Countable
+        {
             public function count(): int
             {
                 return 5;

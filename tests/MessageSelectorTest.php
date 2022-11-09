@@ -30,7 +30,7 @@ class MessageSelectorTest extends TestCase
     }
 
     /**
-     * @return array<array>
+     * @return array<mixed>
      */
     public function chooseDataProvider(): array
     {

@@ -10,9 +10,9 @@ namespace Zaphyr\Translate\Contracts;
 interface MessageSelectorInterface
 {
     /**
-     * @param string $line
-     * @param mixed  $number
-     * @param string $locale
+     * @param string    $line
+     * @param int|float $number
+     * @param string    $locale
      *
      * @return mixed
      */

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Zaphyr\Translate\Contracts;
 
+use Countable;
 use InvalidArgumentException;
 
 /**
@@ -40,14 +41,14 @@ interface TranslatorInterface
     /**
      * @return string
      */
-    public function getFallback(): string;
+    public function getFallbackLocale(): string;
 
     /**
-     * @param string $fallback
+     * @param string $fallbackLocale
      *
      * @return TranslatorInterface
      */
-    public function setFallback(string $fallback): TranslatorInterface;
+    public function setFallbackLocale(string $fallbackLocale): TranslatorInterface;
 
     /**
      * @return string
@@ -79,17 +80,17 @@ interface TranslatorInterface
      * @param string               $id
      * @param array<string, mixed> $replace
      * @param string|null          $locale
-     * @param bool                 $fallback
+     * @param bool                 $withFallbackLocale
      *
      * @return array<string, mixed>|string
      */
-    public function get(string $id, array $replace = [], ?string $locale = null, bool $fallback = true);
+    public function get(string $id, array $replace = [], ?string $locale = null, bool $withFallbackLocale = true);
 
     /**
-     * @param string               $id
-     * @param mixed                $number
-     * @param array<string, mixed> $replace
-     * @param string|null          $locale
+     * @param string                           $id
+     * @param int|float|array<mixed>|Countable $number
+     * @param array<string, mixed>             $replace
+     * @param string|null                      $locale
      *
      * @return string
      */
@@ -98,9 +99,9 @@ interface TranslatorInterface
     /**
      * @param string      $id
      * @param string|null $locale
-     * @param bool        $fallback
+     * @param bool        $withFallbackLocale
      *
      * @return bool
      */
-    public function has(string $id, ?string $locale = null, bool $fallback = true): bool;
+    public function has(string $id, ?string $locale = null, bool $withFallbackLocale = true): bool;
 }

@@ -37,15 +37,17 @@ class MessageSelector implements MessageSelectorInterface
      * @param array<string> $segments
      * @param int|float     $number
      *
-     * @return mixed
+     * @return string|null
      */
-    protected function extract(array $segments, $number)
+    protected function extract(array $segments, $number): ?string
     {
         foreach ($segments as $part) {
             if (!is_null($line = $this->extractFromString($part, $number))) {
                 return $line;
             }
         }
+
+        return null;
     }
 
     /**
@@ -100,12 +102,12 @@ class MessageSelector implements MessageSelectorInterface
     }
 
     /**
-     * @param string $locale
-     * @param int    $number
+     * @param string    $locale
+     * @param int|float $number
      *
      * @return int
      */
-    protected function getPluralIndex(string $locale, int $number): int
+    protected function getPluralIndex(string $locale, $number): int
     {
         switch ($locale) {
             case 'az':
