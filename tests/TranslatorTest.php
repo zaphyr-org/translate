@@ -116,12 +116,11 @@ class TranslatorTest extends TestCase
     public function validReaderDataProvider(): array
     {
         return [
-            'php' => ['php'],
-            'ini' => ['ini'],
-            'json' => ['json'],
-            'xml' => ['xml'],
-            'yml' => ['yml'],
-            'yaml' => ['yaml'],
+            'php' => [Translator::READER_PHP],
+            'ini' => [Translator::READER_INI],
+            'json' => [Translator::READER_JSON],
+            'xml' => [Translator::READER_XML],
+            'yaml' => [Translator::READER_YAML],
         ];
     }
 

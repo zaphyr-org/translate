@@ -39,6 +39,31 @@ class Translator implements TranslatorInterface
     protected $reader;
 
     /**
+     * @const string
+     */
+    public const READER_PHP = 'php';
+
+    /**
+     * @const string
+     */
+    public const READER_INI = 'ini';
+
+    /**
+     * @const string
+     */
+    public const READER_JSON = 'json';
+
+    /**
+     * @const string
+     */
+    public const READER_XML = 'xml';
+
+    /**
+     * @const string
+     */
+    public const READER_YAML = 'yaml';
+
+    /**
      * @var ParserInterface
      */
     protected $parser;
@@ -150,7 +175,8 @@ class Translator implements TranslatorInterface
      */
     public function setReader(string $reader): TranslatorInterface
     {
-        $validReaders = ['php', 'ini', 'json', 'xml', 'yml', 'yaml'];
+        $reader = strtolower($reader);
+        $validReaders = [self::READER_PHP, self::READER_INI, self::READER_JSON, self::READER_XML, self::READER_YAML];
 
         if (!in_array($reader, $validReaders)) {
             throw new InvalidArgumentException(
