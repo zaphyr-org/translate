@@ -334,7 +334,7 @@ class Translator implements TranslatorInterface
     {
         $this->load($locale, $group);
 
-        $line = Arr::get($this->loaded[$locale][$group], $item);
+        $line = Arr::get($this->loaded, "$locale.$group.$item");
 
         if (is_string($line)) {
             return empty($replace) ? $line : $this->makeReplacements($line, $replace);

@@ -208,6 +208,22 @@ class TranslatorTest extends TestCase
         );
     }
 
+    public function testGetReturnsIdWhenTranslationForLocaleAndFallbackLocaleIsNotAvailable(): void
+    {
+        $translator = new Translator(__DIR__ . '/TestAsset/lang', 'cn', 'en');
+        $id = 'not.translated';
+
+        self::assertEquals('Hello World', $translator->get('messages.welcome'));
+        self::assertEquals($id, $translator->get($id));
+
+        $translator->setLocale('fr');
+        self::assertEquals('Hello World', $translator->get('messages.welcome'));
+        self::assertEquals($id, $translator->get($id));
+
+        $translator->setFallbackLocale('it');
+        $id = 'messages.welcome';
+        self::assertEquals($id, $translator->get($id));
+    }
     /**
      * ------------------------------------------
      * CHOICE
