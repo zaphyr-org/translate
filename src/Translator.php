@@ -5,18 +5,17 @@ declare(strict_types=1);
 namespace Zaphyr\Translate;
 
 use Countable;
-use InvalidArgumentException;
 use RuntimeException;
 use Zaphyr\Translate\Contracts\MessageSelectorInterface;
 use Zaphyr\Translate\Contracts\ReaderInterface;
 use Zaphyr\Translate\Contracts\TranslatorInterface;
+use Zaphyr\Translate\Enum\Reader;
 use Zaphyr\Translate\Readers\ArrayReader;
 use Zaphyr\Translate\Readers\IniReader;
 use Zaphyr\Translate\Readers\JsonReader;
 use Zaphyr\Translate\Readers\XmlReader;
 use Zaphyr\Translate\Readers\YamlReader;
 use Zaphyr\Utils\Arr;
-use Zaphyr\Utils\File;
 use Zaphyr\Utils\Str;
 
 /**
@@ -27,85 +26,60 @@ class Translator implements TranslatorInterface
     /**
      * @var string[]
      */
-    protected $directories = [];
+    protected array $directories = [];
 
     /**
      * @var string
      */
-    protected $locale;
+    protected string $locale;
 
     /**
      * @var string
      */
-    protected $fallbackLocale;
+    protected string $fallbackLocale;
 
     /**
-     * @var string
+     * @var Reader
      */
-    protected $reader;
-
-    /**
-     * @const string
-     */
-    public const READER_PHP = 'php';
-
-    /**
-     * @const string
-     */
-    public const READER_INI = 'ini';
-
-    /**
-     * @const string
-     */
-    public const READER_JSON = 'json';
-
-    /**
-     * @const string
-     */
-    public const READER_XML = 'xml';
-
-    /**
-     * @const string
-     */
-    public const READER_YAML = 'yaml';
+    protected Reader $reader;
 
     /**
      * @var string[]
      */
-    protected static $readerInstances = [
-        self::READER_PHP => ArrayReader::class,
-        self::READER_INI => IniReader::class,
-        self::READER_JSON => JsonReader::class,
-        self::READER_XML => XmlReader::class,
-        self::READER_YAML => YamlReader::class,
+    protected static array $readerInstances = [
+        'php' => ArrayReader::class,
+        'ini' => IniReader::class,
+        'json' => JsonReader::class,
+        'xml' => XmlReader::class,
+        'yaml' => YamlReader::class,
     ];
 
     /**
      * @var array<string, string[]>
      */
-    protected $parsedIds = [];
+    protected array $parsedIds = [];
 
     /**
      * @var array<string, array<mixed>>
      */
-    protected $loaded = [];
+    protected array $loaded = [];
 
     /**
-     * @var MessageSelectorInterface
+     * @var MessageSelectorInterface|null
      */
-    protected $messageSelector;
+    protected MessageSelectorInterface|null $messageSelector = null;
 
     /**
      * @param string|string[] $directories
      * @param string          $locale
      * @param string          $fallbackLocale
-     * @param string          $reader
+     * @param Reader          $reader
      */
     public function __construct(
-        $directories,
+        string|array $directories,
         string $locale,
         string $fallbackLocale = 'en',
-        string $reader = self::READER_PHP
+        Reader $reader = Reader::PHP
     ) {
         $this->directories = is_string($directories) ? [$directories] : $directories;
         $this->locale = $locale;
@@ -117,7 +91,7 @@ class Translator implements TranslatorInterface
     /**
      * {@inheritdoc}
      */
-    public function addDirectory(string $directory): TranslatorInterface
+    public function addDirectory(string $directory): static
     {
         if (!$this->hasDirectory($directory)) {
             $this->directories[] = $directory;
@@ -145,7 +119,7 @@ class Translator implements TranslatorInterface
     /**
      * {@inheritdoc}
      */
-    public function setLocale(string $locale): TranslatorInterface
+    public function setLocale(string $locale): static
     {
         $this->locale = $locale;
 
@@ -163,7 +137,7 @@ class Translator implements TranslatorInterface
     /**
      * {@inheritdoc}
      */
-    public function setFallbackLocale(string $fallbackLocale): TranslatorInterface
+    public function setFallbackLocale(string $fallbackLocale): static
     {
         $this->fallbackLocale = $fallbackLocale;
 
@@ -173,7 +147,7 @@ class Translator implements TranslatorInterface
     /**
      * {@inheritdoc}
      */
-    public function getReader(): string
+    public function getReader(): Reader
     {
         return $this->reader;
     }
@@ -181,17 +155,8 @@ class Translator implements TranslatorInterface
     /**
      * {@inheritdoc}
      */
-    public function setReader(string $reader): TranslatorInterface
+    public function setReader(Reader $reader): static
     {
-        $reader = strtolower($reader);
-        $validReaders = [self::READER_PHP, self::READER_INI, self::READER_JSON, self::READER_XML, self::READER_YAML];
-
-        if (!in_array($reader, $validReaders)) {
-            throw new InvalidArgumentException(
-                'The reader "' . $reader . '" is invalid. ' .
-                'Valid translator readers are "' . implode('", "', $validReaders) . '"'
-            );
-        }
         $this->reader = $reader;
 
         return $this;
@@ -222,8 +187,12 @@ class Translator implements TranslatorInterface
     /**
      * {@inheritdoc}
      */
-    public function get(string $id, array $replace = [], ?string $locale = null, bool $withFallbackLocale = true)
-    {
+    public function get(
+        string $id,
+        array $replace = [],
+        string|null $locale = null,
+        bool $withFallbackLocale = true
+    ): array|string {
         [$group, $item] = $this->parseId($id);
         $locales = $withFallbackLocale ? $this->localeArray($locale) : [$locale ?: $this->locale];
 
@@ -262,7 +231,7 @@ class Translator implements TranslatorInterface
     /**
      * {@inheritdoc}
      */
-    public function has(string $id, ?string $locale = null, bool $withFallbackLocale = true): bool
+    public function has(string $id, string|null $locale = null, bool $withFallbackLocale = true): bool
     {
         return $this->get($id, [], $locale, $withFallbackLocale) !== $id;
     }
@@ -307,7 +276,7 @@ class Translator implements TranslatorInterface
      *
      * @return array<string>
      */
-    protected function localeArray(?string $locale): array
+    protected function localeArray(string|null $locale): array
     {
         return array_filter([$locale ?: $this->locale, $this->fallbackLocale]);
     }
@@ -317,7 +286,7 @@ class Translator implements TranslatorInterface
      *
      * @return string
      */
-    protected function localeForChoice(?string $locale): string
+    protected function localeForChoice(string|null $locale): string
     {
         return $locale ?: $this->locale ?: $this->fallbackLocale;
     }
@@ -330,7 +299,7 @@ class Translator implements TranslatorInterface
      *
      * @return mixed
      */
-    protected function getLine(string $locale, string $group, string $item, array $replace)
+    protected function getLine(string $locale, string $group, string $item, array $replace): mixed
     {
         $this->load($locale, $group);
 
@@ -362,9 +331,9 @@ class Translator implements TranslatorInterface
         }
 
         foreach ($this->directories as $directory) {
-            if (File::exists($path = "$directory/$locale/$group.$this->reader")) {
+            if (file_exists($path = "$directory/$locale/$group." . $this->reader->value)) {
                 /** @var ReaderInterface $readerInstance */
-                $readerInstance = new static::$readerInstances[$this->reader]();
+                $readerInstance = new static::$readerInstances[$this->reader->value]();
                 $this->loaded[$locale][$group] = $readerInstance->read($path);
             }
         }

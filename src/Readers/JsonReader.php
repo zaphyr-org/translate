@@ -23,6 +23,6 @@ class JsonReader implements ReaderInterface
             throw new InvalidArgumentException('Could not read file "' . $file . '"');
         }
 
-        return json_decode($contents, true);
+        return json_decode($contents, true, 512, JSON_THROW_ON_ERROR);
     }
 }

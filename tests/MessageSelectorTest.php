@@ -22,7 +22,7 @@ class MessageSelectorTest extends TestCase
      * @param string $id
      * @param mixed  $number
      */
-    public function testChoose(string $expected, string $id, $number): void
+    public function testChoose(string $expected, string $id, mixed $number): void
     {
         $selector = new MessageSelector();
 
@@ -32,7 +32,7 @@ class MessageSelectorTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function chooseDataProvider(): array
+    public static function chooseDataProvider(): array
     {
         return [
             ['first', 'first', 1],

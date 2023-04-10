@@ -15,7 +15,6 @@ interface ReaderInterface
      * @param string $file
      *
      * @throws InvalidArgumentException
-     *
      * @return array<string, mixed>
      */
     public function read(string $file): array;

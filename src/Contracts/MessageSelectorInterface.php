@@ -16,5 +16,5 @@ interface MessageSelectorInterface
      *
      * @return mixed
      */
-    public function choose(string $line, $number, string $locale);
+    public function choose(string $line, int|float $number, string $locale): mixed;
 }

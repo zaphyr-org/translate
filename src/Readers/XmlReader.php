@@ -27,12 +27,12 @@ class XmlReader implements ReaderInterface
             throw new InvalidArgumentException('Could not read file "' . $file . '"');
         }
 
-        $contents = json_encode(simplexml_load_string($contents));
+        $contents = json_encode(simplexml_load_string($contents), JSON_THROW_ON_ERROR);
 
         if (!is_string($contents)) {
             throw new InvalidArgumentException('Could not read encode contents "' . $contents . '"');
         }
 
-        return json_decode($contents, true);
+        return json_decode($contents, true, 512, JSON_THROW_ON_ERROR);
     }
 }

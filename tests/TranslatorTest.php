@@ -3,11 +3,11 @@
 namespace Zaphyr\TranslateTests;
 
 use Countable;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Zaphyr\Translate\Contracts\MessageSelectorInterface;
 use Zaphyr\Translate\Contracts\TranslatorInterface;
+use Zaphyr\Translate\Enum\Reader;
 use Zaphyr\Translate\MessageSelector;
 use Zaphyr\Translate\Translator;
 
@@ -16,7 +16,7 @@ class TranslatorTest extends TestCase
     /**
      * @var Translator
      */
-    protected $translator;
+    protected Translator $translator;
 
     public function setUp(): void
     {
@@ -26,19 +26,6 @@ class TranslatorTest extends TestCase
     public function tearDown(): void
     {
         unset($this->translator);
-    }
-
-    /**
-     * ------------------------------------------
-     * CONSTRUCTOR
-     * ------------------------------------------
-     */
-
-    public function testConstructorThrowsExceptionOnInvalidReader(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        new Translator(__DIR__, 'de', 'en', 'md');
     }
 
     /**
@@ -96,39 +83,36 @@ class TranslatorTest extends TestCase
      * ------------------------------------------
      */
 
-    /**
-     * @dataProvider validReaderDataProvider
-     *
-     * @param string $reader
-     */
-    public function testReader(string $reader): void
+    public function testSetReaderWithDefaultReaderInstance(): void
     {
-        self::assertEquals('php', $this->translator->getReader());
-
-        $this->translator->setReader($reader);
-
-        self::assertEquals($reader, $this->translator->getReader());
+        self::assertSame(Reader::PHP, $this->translator->getReader());
+    }
+    public function testSetAndGetReader(): void
+    {
+        self::assertSame(Reader::JSON, $this->translator->setReader(Reader::JSON)->getReader());
     }
 
     /**
-     * @return array<string, string[]>
+     * @param Reader $reader
+     *
+     * @dataProvider readerDataProvider
      */
-    public function validReaderDataProvider(): array
+    public function testAdditionalReader(Reader $reader): void
+    {
+        self::assertEquals('bar', $this->translator->setReader($reader)->get('messages.foo'));
+    }
+
+    /**
+     * @return array<Reader[]>
+     */
+    public static function readerDataProvider(): array
     {
         return [
-            'php' => [Translator::READER_PHP],
-            'ini' => [Translator::READER_INI],
-            'json' => [Translator::READER_JSON],
-            'xml' => [Translator::READER_XML],
-            'yaml' => [Translator::READER_YAML],
+            [Reader::INI],
+            [Reader::JSON],
+            [Reader::XML],
+            [Reader::YAML],
         ];
-    }
-
-    public function testSetReaderThrowsExceptionOnInvalidReader(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        $this->translator->setReader('md');
     }
 
     /**
@@ -136,7 +120,6 @@ class TranslatorTest extends TestCase
      * MESSAGE SELECTOR
      * ------------------------------------------
      */
-
 
     public function testGetMessageSelectorReturnsDefaultInstanceByDefault(): void
     {
@@ -224,6 +207,7 @@ class TranslatorTest extends TestCase
         $id = 'messages.welcome';
         self::assertEquals($id, $translator->get($id));
     }
+
     /**
      * ------------------------------------------
      * CHOICE

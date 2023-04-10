@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Zaphyr\Translate\Contracts;
 
 use Countable;
-use InvalidArgumentException;
+use Zaphyr\Translate\Enum\Reader;
 
 /**
  * @author merloxx <merloxx@zaphyr.org>
@@ -15,9 +15,9 @@ interface TranslatorInterface
     /**
      * @param string $directory
      *
-     * @return TranslatorInterface
+     * @return $this
      */
-    public function addDirectory(string $directory): TranslatorInterface;
+    public function addDirectory(string $directory): static;
 
     /**
      * @param string $directory
@@ -34,9 +34,9 @@ interface TranslatorInterface
     /**
      * @param string $locale
      *
-     * @return TranslatorInterface
+     * @return $this
      */
-    public function setLocale(string $locale): TranslatorInterface;
+    public function setLocale(string $locale): static;
 
     /**
      * @return string
@@ -46,23 +46,21 @@ interface TranslatorInterface
     /**
      * @param string $fallbackLocale
      *
-     * @return TranslatorInterface
+     * @return $this
      */
-    public function setFallbackLocale(string $fallbackLocale): TranslatorInterface;
+    public function setFallbackLocale(string $fallbackLocale): static;
 
     /**
-     * @return string
+     * @return Reader
      */
-    public function getReader(): string;
+    public function getReader(): Reader;
 
     /**
-     * @param string $reader
+     * @param Reader $reader
      *
-     * @throws InvalidArgumentException on invalid readers
-     *
-     * @return TranslatorInterface
+     * @return $this
      */
-    public function setReader(string $reader): TranslatorInterface;
+    public function setReader(Reader $reader): self;
 
     /**
      * @return MessageSelectorInterface
@@ -72,9 +70,9 @@ interface TranslatorInterface
     /**
      * @param MessageSelectorInterface $messageSelector
      *
-     * @return TranslatorInterface
+     * @return $this
      */
-    public function setMessageSelector(MessageSelectorInterface $messageSelector): TranslatorInterface;
+    public function setMessageSelector(MessageSelectorInterface $messageSelector): self;
 
     /**
      * @param string               $id
@@ -84,7 +82,12 @@ interface TranslatorInterface
      *
      * @return array<string, mixed>|string
      */
-    public function get(string $id, array $replace = [], ?string $locale = null, bool $withFallbackLocale = true);
+    public function get(
+        string $id,
+        array $replace = [],
+        string|null $locale = null,
+        bool $withFallbackLocale = true
+    ): array|string;
 
     /**
      * @param string                           $id
@@ -94,7 +97,12 @@ interface TranslatorInterface
      *
      * @return string
      */
-    public function choice(string $id, $number, array $replace = [], ?string $locale = null): string;
+    public function choice(
+        string $id,
+        int|float|array|Countable $number,
+        array $replace = [],
+        string|null $locale = null
+    ): string;
 
     /**
      * @param string      $id
@@ -103,5 +111,5 @@ interface TranslatorInterface
      *
      * @return bool
      */
-    public function has(string $id, ?string $locale = null, bool $withFallbackLocale = true): bool;
+    public function has(string $id, string|null $locale = null, bool $withFallbackLocale = true): bool;
 }
