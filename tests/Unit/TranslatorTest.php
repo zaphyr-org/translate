@@ -1,6 +1,6 @@
 <?php
 
-namespace Zaphyr\TranslateTests;
+namespace Zaphyr\TranslateTests\Unit;
 
 use Countable;
 use PHPUnit\Framework\TestCase;
@@ -18,12 +18,12 @@ class TranslatorTest extends TestCase
      */
     protected Translator $translator;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $this->translator = new Translator(__DIR__ . '/TestAsset/lang', 'en');
+        $this->translator = new Translator(dirname(__DIR__) . '/TestAsset/lang', 'en');
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         unset($this->translator);
     }
@@ -36,14 +36,14 @@ class TranslatorTest extends TestCase
 
     public function testHasDirectory(): void
     {
-        self::assertTrue($this->translator->hasDirectory(__DIR__ . '/TestAsset/lang'));
+        self::assertTrue($this->translator->hasDirectory(dirname(__DIR__) . '/TestAsset/lang'));
     }
 
     public function testAddDirectory(): void
     {
-        $this->translator->addDirectory($dir = dirname(__DIR__));
+        $this->translator->addDirectory($dir = __DIR__);
 
-        self::assertTrue($this->translator->hasDirectory(__DIR__ . '/TestAsset/lang'));
+        self::assertTrue($this->translator->hasDirectory(dirname(__DIR__) . '/TestAsset/lang'));
         self::assertTrue($this->translator->hasDirectory($dir));
     }
 
@@ -182,7 +182,7 @@ class TranslatorTest extends TestCase
 
     public function testGetWithFallbackLocale(): void
     {
-        $translator = new Translator(__DIR__ . '/TestAsset/lang', 'de', 'fr');
+        $translator = new Translator(dirname(__DIR__) . '/TestAsset/lang', 'de', 'fr');
 
         self::assertEquals('Hallo Welt', $translator->get('messages.welcome'));
         self::assertEquals(
@@ -193,7 +193,7 @@ class TranslatorTest extends TestCase
 
     public function testGetReturnsIdWhenTranslationForLocaleAndFallbackLocaleIsNotAvailable(): void
     {
-        $translator = new Translator(__DIR__ . '/TestAsset/lang', 'cn', 'en');
+        $translator = new Translator(dirname(__DIR__) . '/TestAsset/lang', 'cn', 'en');
         $id = 'not.translated';
 
         self::assertEquals('Hello World', $translator->get('messages.welcome'));

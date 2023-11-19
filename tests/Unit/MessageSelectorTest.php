@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zaphyr\TranslateTests;
+namespace Zaphyr\TranslateTests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Zaphyr\Translate\MessageSelector;
