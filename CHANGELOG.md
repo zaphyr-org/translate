@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file,
 in reverse chronological order by release.
 
+## [v2.0.2](https://github.com/zaphyr-org/translate/compare/2.0.1...2.0.2) [2025-02-10]
+
+### Fixed:
+* Removed PHP 8.4 deprecations
+
 ## [v2.0.1](https://github.com/zaphyr-org/translate/compare/2.0.0...2.0.1) [2023-11-19]
 
 ### New:
