@@ -67,7 +67,7 @@ class Translator implements TranslatorInterface
     /**
      * @var MessageSelectorInterface|null
      */
-    protected MessageSelectorInterface|null $messageSelector = null;
+    protected ?MessageSelectorInterface $messageSelector = null;
 
     /**
      * @param string|string[] $directories
@@ -190,7 +190,7 @@ class Translator implements TranslatorInterface
     public function get(
         string $id,
         array $replace = [],
-        string|null $locale = null,
+        ?string $locale = null,
         bool $withFallbackLocale = true
     ): array|string {
         [$group, $item] = $this->parseId($id);
@@ -208,7 +208,7 @@ class Translator implements TranslatorInterface
     /**
      * {@inheritdoc}
      */
-    public function choice(string $id, $number, array $replace = [], string $locale = null): string
+    public function choice(string $id, $number, array $replace = [], ?string $locale = null): string
     {
         $locale = $this->localeForChoice($locale);
         $line = $this->get($id, $replace, $locale);
@@ -231,7 +231,7 @@ class Translator implements TranslatorInterface
     /**
      * {@inheritdoc}
      */
-    public function has(string $id, string|null $locale = null, bool $withFallbackLocale = true): bool
+    public function has(string $id, ?string $locale = null, bool $withFallbackLocale = true): bool
     {
         return $this->get($id, [], $locale, $withFallbackLocale) !== $id;
     }
@@ -276,7 +276,7 @@ class Translator implements TranslatorInterface
      *
      * @return array<string>
      */
-    protected function localeArray(string|null $locale): array
+    protected function localeArray(?string $locale): array
     {
         return array_filter([$locale ?: $this->locale, $this->fallbackLocale]);
     }
@@ -286,7 +286,7 @@ class Translator implements TranslatorInterface
      *
      * @return string
      */
-    protected function localeForChoice(string|null $locale): string
+    protected function localeForChoice(?string $locale): string
     {
         return $locale ?: $this->locale ?: $this->fallbackLocale;
     }

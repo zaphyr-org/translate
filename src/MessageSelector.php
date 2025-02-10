@@ -39,7 +39,7 @@ class MessageSelector implements MessageSelectorInterface
      *
      * @return string|null
      */
-    protected function extract(array $segments, int|float $number): string|null
+    protected function extract(array $segments, int|float $number): ?string
     {
         foreach ($segments as $part) {
             if (!is_null($line = $this->extractFromString($part, $number))) {

@@ -85,7 +85,7 @@ interface TranslatorInterface
     public function get(
         string $id,
         array $replace = [],
-        string|null $locale = null,
+        ?string $locale = null,
         bool $withFallbackLocale = true
     ): array|string;
 
@@ -101,7 +101,7 @@ interface TranslatorInterface
         string $id,
         int|float|array|Countable $number,
         array $replace = [],
-        string|null $locale = null
+        ?string $locale = null
     ): string;
 
     /**
@@ -111,5 +111,5 @@ interface TranslatorInterface
      *
      * @return bool
      */
-    public function has(string $id, string|null $locale = null, bool $withFallbackLocale = true): bool;
+    public function has(string $id, ?string $locale = null, bool $withFallbackLocale = true): bool;
 }
