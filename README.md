@@ -22,7 +22,7 @@ composer require zaphyr-org/translate
 
 ## Documentation
 
-You can read the full documentation [here](https://zaphyr.org/docs/2.x/repositories/translate).
+You can read the full documentation [here](https://zaphyr.org/docs/repositories/latest/translate).
 
 ## Changelog
 
@@ -30,7 +30,8 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 ## Issues
 
-Bug reports and feature requests can be submitted on the [GitHub Issue Tracker](https://github.com/zaphyr-org/translate/issues).
+Bug reports and feature requests can be submitted on
+the [GitHub Issue Tracker](https://github.com/zaphyr-org/translate/issues).
 
 ## Security
 
